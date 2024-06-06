@@ -2,15 +2,23 @@ from fastapi import HTTPException, status
 import os
 import pymysql.cursors
 from pymysql import converters
+import configparser
 
 
 class DatabaseConnector:
     def __init__(self):
-        self.host = os.getenv("DATABASE_HOST")
-        self.user = os.getenv("DATABASE_USERNAME")
-        self.password = os.getenv("DATABASE_PASSWORD")
-        self.database = os.getenv("DATABASE")
-        self.port = int(os.getenv("DATABASE_PORT"))
+        config = configparser.ConfigParser()
+        config.read("config.ini")
+        # self.host = config["mysql"]["DATABASE_HOST"]
+        # self.user = config["mysql"]["DATABASE_USERNAME"]
+        # self.password = config["mysql"]["DATABASE_PASSWORD"]
+        # self.database = config["mysql"]["DATABASE"]
+        # self.port = int(config["mysql"]["DATABASE_PORT"])
+        self.host = 'localhost'
+        self.user = 'ttnm'
+        self.password = 'asdQWE!@#'
+        self.database = 'read_book_app'
+        self.port = 3306
         self.conversions = converters.conversions
         self.conversions[pymysql.FIELD_TYPE.BIT] = (
             lambda x: False if x == b"\x00" else True

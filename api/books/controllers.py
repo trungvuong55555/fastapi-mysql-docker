@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from typing import List
 
 from api.database.connector import DatabaseConnector
-from models import BooksGetRequestModel
+from api.books.models import BooksGetRequestModel
 database = DatabaseConnector()
 
 
