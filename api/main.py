@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from books.routers import router as book_router
+from playlists.routers import router as playlist_router
 
 # Set API info
 app = FastAPI(
@@ -11,6 +12,7 @@ app = FastAPI(
 )
 
 app.include_router(book_router)
+app.include_router(playlist_router)
 
 if __name__ == "__main__":
     import uvicorn

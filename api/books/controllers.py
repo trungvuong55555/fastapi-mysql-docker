@@ -24,4 +24,10 @@ def get_book(book_model: BooksGetRequestModel) -> List[dict]:
         """
     )
 
+    database.action(
+        f"""
+            insert into History (BookId, DeviceId) values ({book_model.book_id}, {book_model.device_id})
+        """
+    )
+
     return books

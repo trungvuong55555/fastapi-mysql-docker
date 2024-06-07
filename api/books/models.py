@@ -1,12 +1,7 @@
-from pydantic import BaseModel, EmailStr, validator
-from typing import Optional
+from pydantic import BaseModel
 
 
 class BooksGetRequestModel(BaseModel):
-    device_id: str
+    device_id: str = -1
     book_id: str
     chapter_id: str
-
-
-class BookResponseModel(BaseModel):
-    pass
