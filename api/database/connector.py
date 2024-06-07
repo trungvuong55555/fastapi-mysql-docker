@@ -1,70 +1,61 @@
+import mysql.connector
+from mysql.connector import Error
 from fastapi import HTTPException, status
-import os
-import pymysql.cursors
-from pymysql import converters
-import configparser
+import api.database.config
 
 
 class DatabaseConnector:
-    def __init__(self):
-        config = configparser.ConfigParser()
-        config.read("config.ini")
-        # self.host = config["mysql"]["DATABASE_HOST"]
-        # self.user = config["mysql"]["DATABASE_USERNAME"]
-        # self.password = config["mysql"]["DATABASE_PASSWORD"]
-        # self.database = config["mysql"]["DATABASE"]
-        # self.port = int(config["mysql"]["DATABASE_PORT"])
-        self.host = 'localhost'
-        self.user = 'ttnm'
-        self.password = 'asdQWE!@#'
-        self.database = 'read_book_app'
-        self.port = 3306
-        self.conversions = converters.conversions
-        self.conversions[pymysql.FIELD_TYPE.BIT] = (
-            lambda x: False if x == b"\x00" else True
-        )
-        if not self.host:
+    def __init__(self, host=api.database.config.DATABASE_HOST, database=api.database.config.DATABASE,
+                 user=api.database.config.DATABASE_USERNAME, password=api.database.config.DATABASE_PASSWORD,
+                 port=api.database.config.DATABASE_PORT):
+        self.__host = host
+        self.__user = user
+        self.__password = password
+        self.__database = database
+        self.__port = port
+        if not self.__host:
             raise EnvironmentError("DATABASE_HOST environment variable not found")
-        if not self.user:
+        if not self.__user:
             raise EnvironmentError("DATABASE_USERNAME environment variable not found")
-        if not self.password:
+        if not self.__password:
             raise EnvironmentError("DATABASE_PASSWORD environment variable not found")
-        if not self.database:
+        if not self.__database:
             raise EnvironmentError("DATABASE environment variable not found")
+        if not self.__port:
+            raise EnvironmentError("DATABASE port variable not found")
 
-    def get_connection(self):
-        connection = pymysql.connect(
-            host=self.host,
-            port=self.port,
-            user=self.user,
-            password=self.password,
-            database=self.database,
-            cursorclass=pymysql.cursors.DictCursor,
-            conv=self.conversions,
-        )
-        return connection
-
-    def query_get(self, sql, param):
+    def __connection(self):
         try:
-            connection = self.get_connection()
-            with connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(sql, param)
-                    return cursor.fetchall()
+            conn = mysql.connector.connect(user=self.__user,
+                                           host=self.__host,
+                                           database=self.__database,
+                                           password=self.__password,
+                                           port=self.__port)
+            return conn
+        except Error as e:
+            raise EnvironmentError("Connect to MySQL failed: " + str(e))
+
+    def action(self, query):
+        try:
+            conn = self.__connection()
+            my_cursor = conn.cursor()
+            my_cursor.execute(query)
+            conn.commit()
+            conn.close()
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Database error: " + str(e),
             )
 
-    def query_put(self, sql, param):
+    def query_get(self, query):
         try:
-            connection = self.get_connection()
-            with connection:
-                with connection.cursor() as cursor:
-                    cursor.execute(sql, param)
-                    connection.commit()
-                    return cursor.lastrowid
+            conn = self.__connection()
+            my_cursor = conn.cursor()
+            my_cursor.execute(query)
+            my_result = my_cursor.fetchall()
+            conn.close()
+            return my_result
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

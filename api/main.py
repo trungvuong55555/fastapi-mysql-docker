@@ -3,8 +3,8 @@ from books.routers import router as book_router
 
 # Set API info
 app = FastAPI(
-    title="Example API",
-    description="This is an example API of FastAPI",
+    title="Contact Machine Backend",
+    description="This is code backend of contact machine",
     docs_url="/v1/docs",
     redoc_url="/v1/redoc",
     openapi_url="/v1/openapi.json",
