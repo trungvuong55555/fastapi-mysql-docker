@@ -1,9 +1,17 @@
 # Dockerfile for development
-FROM python:3.12-slim-bookworm
+FROM python:3.8
+MAINTAINER QuanDV <trungvuong55555@gmail.com>
 
-WORKDIR /app
 
-COPY . .
+RUN mkdir /api
+COPY books/ /api/books/
+COPY database/ /api/database
+COPY playlists/ /api/playlists
+COPY requirements.txt /api/requirements.txt
+COPY main.py /api/main.py
+RUN cd /api
+WORKDIR /api
+
 RUN pip install --no-cache-dir -r  requirements.txt
 
 EXPOSE 8000
