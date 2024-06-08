@@ -2,36 +2,56 @@ from typing import List
 
 from api.database.connector import DatabaseConnector
 from api.books.models import BooksGetRequestModel, AllBooksGetRequestModel
+from api.books.pdf_reader import *
 
 database = DatabaseConnector()
 
 
-def get_book(book_model: BooksGetRequestModel) -> List[dict]:
+def update_number_read(book_id: str):
+    # query update number read in book tables
+    query = f"""
+                update Books 
+                set NumberRead = NumberRead + 1 
+                where Books.BookId = {book_id}
+            """
+    database.action(query)
+
+
+def add_history_read_book(book_id: str, device_id: str):
+    query = f"""
+                insert into History (BookId, DeviceId) values ({book_id}, {device_id})
+            """
+    database.action(query)
+
+
+def get_book_chapter(book_model: BooksGetRequestModel) -> List[dict]:
+    result_list = []
+
     # query get specific book
     books = database.query_get(
         f"""
-            select bc.ChapterName , bc.PathSource 
+            select bc.ChapterName ,  b.PathSource, bc.PathSource 
             from Books b inner join BookChapter bc ON b.BookId = bc.BookId 
             where b.BookId = {book_model.book_id} and bc.ChapterId = {book_model.chapter_id}
         """
     )
 
-    # query update number read in book tables
-    database.action(
-        f"""
-            update Books 
-            set NumberRead = NumberRead + 1 
-            where Books.BookId = {book_model.book_id}
-        """
-    )
+    for book in books:
+        chapter_name = book[0]
+        path_source_book = book[1]
+        path_source_chapter = book[2]
+        path_source = path_source_book + "/" + path_source_chapter
+        content = read_all_content_in_pdf(path_source)
+        book_dict = dict({
+            "ChapterName": chapter_name,
+            "Text": content
+        })
+        result_list.append(book_dict)
 
-    database.action(
-        f"""
-            insert into History (BookId, DeviceId) values ({book_model.book_id}, {book_model.device_id})
-        """
-    )
+    update_number_read(book_model.book_id)
+    add_history_read_book(book_model.book_id, book_model.device_id)
 
-    return books
+    return result_list
 
 
 def get_book_name(book_id: str) -> List[dict]:
