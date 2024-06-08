@@ -22,4 +22,4 @@ async def add_book(book_detail: PlayListGetRequestModel):
 @router.delete("/api/v1/playlist")
 async def delete_book(book_detail: PlayListGetRequestModel):
     delete_book_from_playlist(book_detail)
-    return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder("Delete books success!"))
+    return JSONResponse(status_code=status.HTTP_200_OK, content=jsonable_encoder("Deleted books success!"))

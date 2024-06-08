@@ -27,4 +27,27 @@ def get_book_from_playlist(device_id: int) -> List[dict]:
 
     books = database.query_get(query)
 
-    return books
+    result_list = []
+
+    for book in books:
+        book_id = book[0]
+        book_name = book[1]
+        author_id = book[2]
+        category_id = book[3]
+        released = book[4]
+        book_desc = book[5]
+        number_read = book[6]
+
+        book_dict = dict({
+            "BookId": book_id,
+            "BookName": book_name,
+            "AuthorId": author_id,
+            "CategoryId": category_id,
+            "Released": released,
+            "BookDescription": book_desc,
+            "NumberRead": number_read
+        })
+
+        result_list.append(book_dict)
+
+    return result_list
