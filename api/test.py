@@ -1,6 +1,5 @@
-from api.books.controllers import get_book_name
+from api.books.text_reader import read_all_content_in_pdf
 
-book_names = get_book_name("2")
+content = read_all_content_in_pdf("/home/quan/Documents/sample.txt")
 
-for name in book_names:
-    print(name[0])
+print(content)
