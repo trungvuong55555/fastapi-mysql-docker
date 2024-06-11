@@ -26,6 +26,7 @@ CREATE TABLE Books (
   Released DATE,
   PathSource VARCHAR(255),
   BookDescription TEXT,
+  CoverImage TEXT,
   NumberRead DECIMAL(10,2) DEFAULT 0,
   FOREIGN KEY (AuthorId) REFERENCES Author(AuthorId),
   FOREIGN KEY (CategoryId) REFERENCES Category(CategoryId)
