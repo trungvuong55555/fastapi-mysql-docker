@@ -1,7 +1,7 @@
 from typing import List
 
-from api.database.connector import DatabaseConnector
-from api.playlists.models import PlayListGetRequestModel
+from database.connector import DatabaseConnector
+from playlists.models import PlayListGetRequestModel
 
 database = DatabaseConnector()
 

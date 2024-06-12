@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from api.books.controllers import get_book_chapter, get_all_books
-from api.books.models import BooksGetRequestModel, AllBooksGetRequestModel
+from books.controllers import get_book_chapter, get_all_books
+from books.models import BooksGetRequestModel, AllBooksGetRequestModel
 
 router = APIRouter()
 

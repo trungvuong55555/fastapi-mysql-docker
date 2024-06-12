@@ -1,13 +1,13 @@
 import mysql.connector
 from mysql.connector import Error
 from fastapi import HTTPException, status
-import api.database.config
+import database.config
 
 
 class DatabaseConnector:
-    def __init__(self, host=api.database.config.DATABASE_HOST, database=api.database.config.DATABASE,
-                 user=api.database.config.DATABASE_USERNAME, password=api.database.config.DATABASE_PASSWORD,
-                 port=api.database.config.DATABASE_PORT):
+    def __init__(self, host=database.config.DATABASE_HOST, database=database.config.DATABASE,
+                 user=database.config.DATABASE_USERNAME, password=database.config.DATABASE_PASSWORD,
+                 port=database.config.DATABASE_PORT):
         self.__host = host
         self.__user = user
         self.__password = password

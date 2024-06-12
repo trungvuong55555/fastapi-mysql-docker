@@ -1,8 +1,9 @@
 from typing import List
 
-from api.database.connector import DatabaseConnector
-from api.books.models import BooksGetRequestModel, AllBooksGetRequestModel
-from api.books.pdf_reader import *
+from database.connector import DatabaseConnector
+from books.models import BooksGetRequestModel, AllBooksGetRequestModel
+# from books.pdf_reader import *
+from books.text_reader import *
 
 database = DatabaseConnector()
 
@@ -40,7 +41,7 @@ def get_book_chapter(book_model: BooksGetRequestModel) -> List[dict]:
         chapter_name = book[0]
         path_source_book = book[1]
         path_source_chapter = book[2]
-        path_source = path_source_book + "/" + path_source_chapter
+        path_source = path_source_book + path_source_chapter
         content = read_all_content_in_pdf(path_source)
         book_dict = dict({
             "ChapterName": chapter_name,

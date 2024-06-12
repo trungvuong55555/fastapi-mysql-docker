@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
-from api.playlists.models import PlayListGetRequestModel
-from api.playlists.controllers import get_book_from_playlist, delete_book_from_playlist, add_book_to_playlist
+from playlists.models import PlayListGetRequestModel
+from playlists.controllers import get_book_from_playlist, delete_book_from_playlist, add_book_to_playlist
 
 router = APIRouter()
 
