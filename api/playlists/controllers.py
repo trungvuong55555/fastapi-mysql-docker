@@ -20,7 +20,7 @@ def delete_book_from_playlist(play_list_model: PlayListGetRequestModel):
 def get_book_from_playlist(device_id: int) -> List[dict]:
     # query get books in playlist
     query = f"""
-                select b.BookId , b.BookName , b.AuthorId , b.CategoryId , b.Released , b.BookDescription , b.NumberRead 
+                select b.BookId , b.BookName , b.AuthorId , b.CategoryId , b.Released , b.BookDescription , b.NumberRead, b.CoverImage 
                 from PlayList pl inner join Books b on pl.BookId = b.BookId 
                 where pl.DeviceId = {device_id}
             """
@@ -37,7 +37,7 @@ def get_book_from_playlist(device_id: int) -> List[dict]:
         released = book[4]
         book_desc = book[5]
         number_read = book[6]
-
+        cover_image = book[7]
         book_dict = dict({
             "BookId": book_id,
             "BookName": book_name,
@@ -45,7 +45,8 @@ def get_book_from_playlist(device_id: int) -> List[dict]:
             "CategoryId": category_id,
             "Released": released,
             "BookDescription": book_desc,
-            "NumberRead": number_read
+            "NumberRead": number_read,
+            "CoverImage": cover_image
         })
 
         result_list.append(book_dict)
