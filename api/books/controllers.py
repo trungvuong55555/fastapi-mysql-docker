@@ -1,8 +1,9 @@
 from typing import List
 
-from api.database.connector import DatabaseConnector
-from api.books.models import BooksGetRequestModel, AllBooksGetRequestModel
-from api.books.pdf_reader import *
+from database.connector import DatabaseConnector
+from books.models import BooksGetRequestModel, AllBooksGetRequestModel
+# from books.pdf_reader import *
+from books.text_reader import *
 
 database = DatabaseConnector()
 
@@ -40,7 +41,7 @@ def get_book_chapter(book_model: BooksGetRequestModel) -> List[dict]:
         chapter_name = book[0]
         path_source_book = book[1]
         path_source_chapter = book[2]
-        path_source = path_source_book + "/" + path_source_chapter
+        path_source = path_source_book + path_source_chapter
         content = read_all_content_in_pdf(path_source)
         book_dict = dict({
             "ChapterName": chapter_name,
@@ -67,7 +68,7 @@ def get_book_name(book_id: str) -> List[dict]:
 
 def get_info_category_book_book(book_model: AllBooksGetRequestModel) -> List[dict]:
     query = """ select a.AuthorId, a.AuthorName, a.AuthorDescr, c.CategoryId, c.CategoryName, b.BookId, b.BookName, 
-    b.Released, b.BookDescription, b.NumberRead from Books b inner join Author a on b.AuthorId = a.AuthorId inner 
+    b.Released, b.BookDescription, b.NumberRead, b.CoverImage from Books b inner join Author a on b.AuthorId = a.AuthorId inner 
     join Category c on b.CategoryId = c.CategoryId """
 
     # logic for input book_name, author_name, category_name if they are exist
@@ -115,6 +116,7 @@ def get_all_books(book_model: AllBooksGetRequestModel):
         book_released = book_info[7]
         book_description = book_info[8]
         book_number_read = book_info[9]
+        cover_book = book_info[10]
 
         list_book = []
         books = get_book_name(book_id)
@@ -138,7 +140,8 @@ def get_all_books(book_model: AllBooksGetRequestModel):
             "BookReleased": book_released,
             "BookDescription": book_description,
             "NumberRead": book_number_read,
-            "BookChapterName": list_book
+            "BookChapterName": list_book,
+            "CoverImage": cover_book
         })
 
         book_info_dict = dict({
